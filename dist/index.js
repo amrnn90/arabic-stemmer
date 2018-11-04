@@ -112,14 +112,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -128,20 +120,17 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 var p4 = ['وكال', 'وبال', 'فبال']; // length three prefixes
 
-var p3old = ["\u0643\u0627\u0644", "\u0628\u0627\u0644", "\u0648\u0644\u0644", "\u0648\u0627\u0644"];
 var p3 = ['وال', 'فال', 'كال', 'بال', 'ولل', 'فلل']; // length two prefixes
 
-var p2old = ["\u0627\u0644", "\u0644\u0644"];
 var p2 = ['ال', 'لل', 'لي', 'لت', 'لن', 'لا', 'فل', 'فس', 'في', 'فت', 'فن', 'فا', 'سي', 'ست', 'سن', 'سا', 'ول', 'وس', 'وي', 'وت', 'ون', 'وا']; // length one prefixes
 
-var p1old = ["\u0644", "\u0628", "\u0641", "\u0633", "\u0648", "\u064A", "\u062A", "\u0646", "\u0627", 'ت'];
 var p1 = ['ل', 'ب', 'ف', 'س', 'و', 'ي', 'ت', 'ن', 'ا']; // length three suffixes
 
 var s3 = ["\u062A\u0645\u0644", "\u0647\u0645\u0644", "\u062A\u0627\u0646", "\u062A\u064A\u0646", "\u0643\u0645\u0644"]; // length two suffixes
 
 var s2 = ["\u0648\u0646", "\u0627\u062A", "\u0627\u0646", "\u064A\u0646", "\u062A\u0646", "\u0643\u0645", "\u0647\u0646", "\u0646\u0627", "\u064A\u0627", "\u0647\u0627", "\u062A\u0645", "\u0643\u0646", "\u0646\u064A", "\u0648\u0627", "\u0645\u0627", "\u0647\u0645"]; // length one suffixes
 
-var s1 = ["\u0629", "\u0647", "\u064A", "\u0643", "\u062A", "\u0627", "\u0646"];
+var s1 = ["\u0629", "\u0647", "\u064A", "\u0643", "\u062A", "\u0627", "\u0646", 'و'];
 var pr4 = {
   0: ["\u0645"],
   1: ["\u0627"],
@@ -152,72 +141,73 @@ var re_short_vowels = /[\u064B-\u0652]/g;
 var re_hamza = /[\u0621\u0623\u0624\u0625\u0626]/g;
 var re_initial_hamza = /^[\u0622\u0623\u0625]/;
 var stop_words = ["\u064A\u0643\u0648\u0646", "\u0648\u0644\u064A\u0633", "\u0648\u0643\u0627\u0646", "\u0643\u0630\u0644\u0643", "\u0627\u0644\u062A\u064A", "\u0648\u0628\u064A\u0646", "\u0639\u0644\u064A\u0647\u0627", "\u0645\u0633\u0627\u0621", "\u0627\u0644\u0630\u064A", "\u0648\u0643\u0627\u0646\u062A", "\u0648\u0644\u0643\u0646", "\u0648\u0627\u0644\u062A\u064A", "\u062A\u0643\u0648\u0646", "\u0627\u0644\u064A\u0648\u0645", "\u0627\u0644\u0644\u0630\u064A\u0646", "\u0639\u0644\u064A\u0647", "\u0643\u0627\u0646\u062A", "\u0644\u0630\u0644\u0643", "\u0623\u0645\u0627\u0645", "\u0647\u0646\u0627\u0643", "\u0645\u0646\u0647\u0627", "\u0645\u0627\u0632\u0627\u0644", "\u0644\u0627\u0632\u0627\u0644", "\u0644\u0627\u064A\u0632\u0627\u0644", "\u0645\u0627\u064A\u0632\u0627\u0644", "\u0627\u0635\u0628\u062D", "\u0623\u0635\u0628\u062D", "\u0623\u0645\u0633\u0649", "\u0627\u0645\u0633\u0649", "\u0623\u0636\u062D\u0649", "\u0627\u0636\u062D\u0649", "\u0645\u0627\u0628\u0631\u062D", "\u0645\u0627\u0641\u062A\u0626", "\u0645\u0627\u0627\u0646\u0641\u0643", "\u0644\u0627\u0633\u064A\u0645\u0627", "\u0648\u0644\u0627\u064A\u0632\u0627\u0644", "\u0627\u0644\u062D\u0627\u0644\u064A", "\u0627\u0644\u064A\u0647\u0627", "\u0627\u0644\u0630\u064A\u0646", "\u0641\u0627\u0646\u0647", "\u0648\u0627\u0644\u0630\u064A", "\u0648\u0647\u0630\u0627", "\u0644\u0647\u0630\u0627", "\u0641\u0643\u0627\u0646", "\u0633\u062A\u0643\u0648\u0646", "\u0627\u0644\u064A\u0647", "\u064A\u0645\u0643\u0646", "\u0628\u0647\u0630\u0627", "\u0627\u0644\u0630\u0649"];
-var pat7 = [/\u0627\u0633\u062a(.)(.)\u0627(.)/]; // Groups of length six patterns and length three roots
+var patterns = {
+  8: [],
+  7: [/\u0627\u0633\u062a(.)(.)\u0627(.)/],
+  6: [/\u0627\u0633\u062a(.)(.)(.)/, // استفعل
+  /\u0645\u0633\u062a(.)(.)(.)/, // مستفعل
+  /\u0645(.)\u0627(.)(.)\u0647/, // مفاعلة
+  /\u0627(.)\u062a(.)\u0627(.)/, // افتعال
+  /\u0627(.)\u0639\u0648(.)(.)/, // افعوعل
+  /\u062a(.)\u0627(.)\u064a(.)/, // تفاعيل
+  /\u0645(.)\u0627(.)\u064a(.)/, // مفاعيل
+  /\u0627(.)(.)(\u064a)\u0627\u0627/, // افعياء
+  /(.)(.)(.)\u064a\u0627\u0627/, // فعلياء
+  /(.)\u0648\u0627(.)\u064a(.)/, // فواعيل
+  /\u0645\u062a(.)\u0627(.)(.)/, // متفاعل
 
-var pat6 = [/\u0627\u0633\u062a(.)(.)(.)/, // استفعل
-/\u0645\u0633\u062a(.)(.)(.)/, // مستفعل
-/\u0645(.)\u0627(.)(.)\u0629/, // مفاعلة
-/\u0627(.)\u062a(.)\u0627(.)/, // افتعال
-/\u0627(.)\u0639\u0648(.)(.)/, // افعوعل
-/\u062a(.)\u0627(.)\u064a(.)/, // تفاعيل
-/\u0645(.)\u0627(.)\u064a(.)/, // مفاعيل
-/\u0627(.)(.)(\u064a)\u0627\u0621/, // افعياء
-/(.)(.)(.)\u064a\u0627\u0621/, // فعلياء
-/(.)\u0648\u0627(.)\u064a(.)/, // فواعيل
-/\u0645\u062a(.)\u0627(.)(.)/]; // Groups of length six patterns and length four roots
+  /* 64 */
+  /\u0627(.)(.)(.)\u0627(.)/, // افعلال
+  /\u0645\u062a(.)(.)(.)(.)/, // متفعلل
+  /(.)(.)(.)(.)\u0627\u0627/],
+  5: [/\u0627(.)\u062a(.)(.)/, // افتعل
+  /\u0627(.)\u0627(.)(.)/, // افاعل
+  /\u0645(.)(.)\u0648(.)/, // مفعول
+  /\u0645(.)(.)\u0627(.)/, // مفعال
+  /\u0645(.)(.)\u064a(.)/, // مفعيل
+  /\u0645(.)(.)(.)\u0647/, // مفعلة
+  /\u062a(.)(.)(.)\u0647/, // تفعلة
+  /\u0627(.)(.)(.)\u0647/, // أفعلة
+  /\u0645(.)\u062a(.)(.)/, // مفتعل
+  /\u064a(.)\u062a(.)(.)/, // يفتعل
+  /\u062a(.)\u062a(.)(.)/, // تفتعل
+  /\u0645(.)\u0627(.)(.)/, // مفاعل
+  /\u062a(.)\u0627(.)(.)/, // تفاعل
+  /(.)(.)\u0648(.)\u0647/, // فعولة
+  /(.)(.)\u0627(.)\u0647/, // فعالة
+  /\u0627\u0646(.)(.)(.)/, // انفعل
+  /\u0645\u0646(.)(.)(.)/, // منفعل
+  /\u0627(.)(.)\u0627(.)/, // افعال
+  /(.)(.)(.)\u0627\u0646/, // فعلان
+  /\u062a(.)(.)\u064a(.)/, // تفعيل
+  /(.)\u0627(.)\u0648(.)/, // فاعول
+  /(.)\u0648\u0627(.)(.)/, // فواعل
+  /(.)(.)\u0627\u0626(.)/, // فعائل
+  /(.)\u0627(.)(.)\u0647/, // فاعلة
+  /(.)(.)\u0627(.)\u064a/, // فعالي
+  /(.)(.)(.)\u0627\u0627/, // فعلاء
+  /\u062a\u0645(.)(.)(.)/, // تمفعل
 
-var pat64 = [/\u0627(.)(.)(.)\u0627(.)/, // افعلال
-/\u0645\u062a(.)(.)(.)(.)/, // متفعلل
-/(.)(.)(.)(.)\u0627\u0621/]; // Groups of length five patterns and length three roots
-
-var pat5 = [/\u0627(.)\u062a(.)(.)/, // افتعل
-/\u0627(.)\u0627(.)(.)/, // افاعل
-/\u0645(.)(.)\u0648(.)/, // مفعول
-/\u0645(.)(.)\u0627(.)/, // مفعال
-/\u0645(.)(.)\u064a(.)/, // مفعيل
-/\u0645(.)(.)(.)\u0629/, // مفعلة
-/\u062a(.)(.)(.)\u0629/, // تفعلة
-/\u0627(.)(.)(.)\u0629/, // أفعلة
-/\u0645(.)\u062a(.)(.)/, // مفتعل
-/\u064a(.)\u062a(.)(.)/, // يفتعل
-/\u062a(.)\u062a(.)(.)/, // تفتعل
-/\u0645(.)\u0627(.)(.)/, // مفاعل
-/\u062a(.)\u0627(.)(.)/, // تفاعل
-/(.)(.)\u0648(.)\u0629/, // فعولة
-/(.)(.)\u0627(.)\u0629/, // فعالة
-/\u0627\u0646(.)(.)(.)/, // انفعل
-/\u0645\u0646(.)(.)(.)/, // منفعل
-/\u0627(.)(.)\u0627(.)/, // افعال
-/(.)(.)(.)\u0627\u0646/, // فعلان
-/\u062a(.)(.)\u064a(.)/, // تفعيل
-/(.)\u0627(.)\u0648(.)/, // فاعول
-/(.)\u0648\u0627(.)(.)/, // فواعل
-/(.)(.)\u0627\u0626(.)/, // فعائل
-/(.)\u0627(.)(.)\u0629/, // فاعلة
-/(.)(.)\u0627(.)\u064a/, // فعالي
-/(.)(.)(.)\u0627\u0621/, // فعلاء
-/\u062a\u0645(.)(.)(.)/]; // Groups of length five patterns and length four roots
-
-var pat54 = [/\u0645(.)(.)(.)(.)/, // مفعلل
-/\u062a(.)(.)(.)(.)/, // تفعلل
-/\u0627(.)(.)(.)(.)/, // افعلل
-/(.)(.)(.)(.)\u0629/, // فعللة
-/(.)(.)\u0627(.)(.)/, // فعالل
-/(.)(.)(.)\u0648(.)/]; // groups of length four patterns
-
-var pat4 = [/\u0645(.)(.)(.)/, // مفعل
-/(.)\u0627(.)(.)/, // فاعل
-/(.)(.)\u0648(.)/, // فعول
-/(.)(.)\u064a(.)/, // فعيل
-/(.)(.)\u0627(.)/, // فعال
-/(.)(.)(.)\u0629/, // فعلة
-/\u0627(.)(.)(.)/, // افعل
-/\u062a(.)(.)(.)/, // تفعل
-/(.)\u0648(.)(.)/, // فوعل
-/(.)\u064a(.)(.)/, // فيعل
-/(.)(.)(.)\u0646/];
-var pat3 = [/(.)(.)(.)/ // فعل
-];
+  /* 54 */
+  /\u0645(.)(.)(.)(.)/, // مفعلل
+  /\u062a(.)(.)(.)(.)/, // تفعلل
+  /\u0627(.)(.)(.)(.)/, // افعلل
+  /(.)(.)(.)(.)\u0647/, // فعللة
+  /(.)(.)\u0627(.)(.)/, // فعالل
+  /(.)(.)(.)\u0648(.)/],
+  4: [/\u0645(.)(.)(.)/, // مفعل
+  /(.)\u0627(.)(.)/, // فاعل
+  /(.)(.)\u0648(.)/, // فعول
+  /(.)(.)\u064a(.)/, // فعيل
+  /(.)(.)\u0627(.)/, // فعال
+  /(.)(.)(.)\u0647/, // فعلة
+  /\u0627(.)(.)(.)/, // افعل
+  /\u062a(.)(.)(.)/, // تفعل
+  /(.)\u0648(.)(.)/, // فوعل
+  /(.)\u064a(.)(.)/, // فيعل
+  /(.)(.)(.)\u0646/],
+  3: [/(.)(.)(.)/]
+};
 
 var Stemmer2 =
 /*#__PURE__*/
@@ -231,144 +221,189 @@ function () {
     value: function stem(token) {
       var _this = this;
 
+      token = token.trim();
+      token = token.replace(re_short_vowels, '');
+
+      if (stop_words.includes(token)) {
+        return token;
+      }
+
       token = this.preNormalize(token);
-      var candidates = this.getCandidates([pat7, pat6, pat64, pat5, pat54, pat4, pat3], token); // if (candidates.length == 0) {
-      //     candidates = this.getCandidates([pat3], token);
-      // }
-
-      candidates = candidates.filter(function (_ref) {
-        var root = _ref.root,
-            prefix = _ref.prefix,
-            suffix = _ref.suffix;
-        return _this.isPotentialPrefix(prefix) && _this.isPotentialSuffix(suffix);
+      token = this.pre432(token);
+      token = this.suf32(token);
+      var matches = this.getMatches(token, 'suffix');
+      matches = matches.concat(this.getMatches(token, 'prefix'));
+      matches = matches.map(function (m) {
+        return _this.postNormalize(m);
       });
-      candidates = candidates.map(function (c) {
-        c.root = _this.postNormalize(c.root);
-        return c;
-      });
-      candidates.sort(function (a, b) {
-        var lenDiff = a.root.length - b.root.length;
-        if (lenDiff) return lenDiff;
-        var aFreq = candidates.reduce(function (freq, _ref2) {
-          var root = _ref2.root;
-          return root == a.root ? freq + 1 : freq;
-        }, 0);
-        var bFreq = candidates.reduce(function (freq, _ref3) {
-          var root = _ref3.root;
-          return root == b.root ? freq + 1 : freq;
-        }, 0);
-        return bFreq - aFreq;
-      });
-      return candidates;
-    }
-  }, {
-    key: "getMatchingPatterns",
-    value: function getMatchingPatterns(token) {
-      return [pat7, pat6, pat64, pat5, pat54, pat4, pat3].reduce(function (res, patList) {
-        var currentRes = [];
-        patList.forEach(function (pat) {
-          var match;
-
-          if (match = pat.exec(token)) {
-            currentRes = currentRes.concat(pat.source);
-          }
-        });
-        return res.concat(currentRes);
+      matches = matches.reduce(function (res, current) {
+        !res.includes(current) && res.push(current);
+        return res;
       }, []);
+      return matches;
     }
   }, {
-    key: "getCandidates",
-    value: function getCandidates(patternGroups, token) {
-      var _this2 = this;
-
-      return patternGroups.reduce(function (res, patList) {
-        var currentRes = [];
-        patList.forEach(function (pat) {
-          currentRes = currentRes.concat(_this2.extract(pat, token));
-        });
-        return res.concat(currentRes);
-      }, []);
-    }
-  }, {
-    key: "extract",
-    value: function extract(pattern, token) {
-      var results = [];
-      var _token = token;
-
-      while (_token.length >= 3) {
-        var match = void 0;
-
-        if (match = pattern.exec(_token)) {
-          var _token$split = token.split(match[0]),
-              _token$split2 = _slicedToArray(_token$split, 2),
-              prefix = _token$split2[0],
-              suffix = _token$split2[1];
-
-          var root = match.slice(1).join('');
-          results.push({
-            root: root,
-            prefix: prefix,
-            suffix: suffix,
-            patLen: match[0].length
-          });
-          _token = token.substr(prefix.length + 1);
-        } else {
-          break;
+    key: "pre432",
+    value: function pre432(word) {
+      if (word.length >= 7) {
+        for (var _i = 0; _i < p4.length; _i++) {
+          var pre4 = p4[_i];
+          if (word.startsWith(pre4)) return word.substr(4);
         }
       }
 
-      return results;
-    }
-  }, {
-    key: "isPotentialPrefix",
-    value: function isPotentialPrefix(prefix) {
-      switch (prefix.length) {
-        case 4:
-          return p4.includes(prefix);
-
-        case 3:
-          return p3.includes(prefix);
-
-        case 2:
-          return p2.includes(prefix);
-
-        case 1:
-          return p1.includes(prefix);
-
-        case 0:
-          return true;
+      if (word.length >= 6) {
+        for (var _i2 = 0; _i2 < p3.length; _i2++) {
+          var pre3 = p3[_i2];
+          if (word.startsWith(pre3)) return word.substr(3);
+        }
       }
 
-      return false;
+      if (word.length >= 5) {
+        for (var _i3 = 0; _i3 < p2.length; _i3++) {
+          var pre2 = p2[_i3];
+          if (word.startsWith(pre2)) return word.substr(2);
+        }
+      }
+
+      return word;
     }
   }, {
-    key: "isPotentialSuffix",
-    value: function isPotentialSuffix(suffix) {
-      s3.forEach(function (s) {
-        suffix = suffix.replace(s, '');
+    key: "suf32",
+    value: function suf32(word) {
+      if (word.length >= 6) {
+        for (var _i4 = 0; _i4 < s3.length; _i4++) {
+          var suf3 = s3[_i4];
+          if (word.endsWith(suf3)) return word.substr(0, word.length - 3);
+        }
+      }
+
+      if (word.length >= 5) {
+        for (var _i5 = 0; _i5 < s2.length; _i5++) {
+          var suf2 = s2[_i5];
+          if (word.endsWith(suf2)) return word.substr(0, word.length - 2);
+        }
+      }
+
+      return word;
+    }
+  }, {
+    key: "getMatches",
+    value: function getMatches(token) {
+      var _this2 = this;
+
+      var removeFirst = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "suffix";
+      var originalToken = token;
+      var len = token.length;
+      var matches = [];
+
+      while (len >= 3) {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = patterns[len][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var pat = _step.value;
+            var match = void 0;
+
+            if (match = pat.exec(token)) {
+              matches.push(match.slice(1).join(''));
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        token = this.removeOne(token, removeFirst);
+
+        if (token.length == len) {
+          break;
+        }
+
+        len -= 1;
+      }
+
+      if (matches.length == 0) {
+        matches.push(originalToken);
+      }
+
+      var finalMatches = [];
+      matches.forEach(function (match) {
+        if (match.length > 3 & match !== originalToken) {
+          finalMatches = finalMatches.concat(_this2.getMatches(match, removeFirst));
+        } else {
+          finalMatches.push(match);
+        }
       });
-      s2.forEach(function (s) {
-        suffix = suffix.replace(s, '');
-      });
-      s1.forEach(function (s) {
-        suffix = suffix.replace(s, '');
-      });
-      if (suffix.length == 0) return true;
-      return false;
+      return finalMatches;
+    }
+  }, {
+    key: "removeOne",
+    value: function removeOne(token) {
+      var removeFirst = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "suffix";
+      var len = token.length;
+
+      if (removeFirst == 'suffix') {
+        token = this.suf1(token);
+
+        if (token.length == len) {
+          token = this.pre1(token);
+        }
+      } else {
+        token = this.pre1(token);
+
+        if (token.length == len) {
+          token = this.suf1(token);
+        }
+      }
+
+      return token;
+    }
+  }, {
+    key: "suf1",
+    value: function suf1(word) {
+      /* """normalize short sufix""" */
+      for (var _i6 = 0; _i6 < s1.length; _i6++) {
+        var sf1 = s1[_i6];
+        if (word.endsWith(sf1)) return word.substr(0, word.length - 1);
+      }
+
+      return word;
+    }
+  }, {
+    key: "pre1",
+    value: function pre1(word) {
+      /* """normalize short prefix""" */
+      for (var _i7 = 0; _i7 < p1.length; _i7++) {
+        var sp1 = p1[_i7];
+        if (word.startsWith(sp1)) return word.substr(1);
+      }
+
+      return word;
     }
   }, {
     key: "preNormalize",
     value: function preNormalize(token) {
-      token = token.replace(re_short_vowels, '');
       token = token.replace(re_hamza, 'ا');
       token = token.replace(/ى/, 'ي');
+      token = token.replace(/ة$/, 'ه');
       return token;
     }
   }, {
     key: "postNormalize",
     value: function postNormalize(token) {
-      console.log(token.split(''));
-
       if (token.length == 3) {
         var c1 = token[0].replace(/[وي]/, 'ا');
         var c2 = token[1].replace(/[او]/, 'ي');
