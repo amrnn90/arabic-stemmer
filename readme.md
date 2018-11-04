@@ -1,1 +1,1 @@
-== Simple Arabic stemmer.
+## Simple Arabic stemmer.
