@@ -372,3 +372,5 @@ export default class ArabicStemmer {
         return word;
     }
 };
+
+export {default as Stemmer2} from './Stemmer2';
