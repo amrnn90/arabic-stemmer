@@ -426,8 +426,10 @@ function () {
         !res.includes(current) && res.push(current);
         return res;
       }, []);
-      matches.push(this.affixCleaner.removeAll());
-      return matches;
+      return {
+        stem: matches,
+        normalized: this.affixCleaner.removeAll()
+      };
     }
   }, {
     key: "getMatches",

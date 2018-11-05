@@ -165,9 +165,10 @@ export default class Stemmer {
             return res;
         }, []);
 
-        matches.push(this.affixCleaner.removeAll());
-
-        return matches;
+        return {
+            stem: matches,
+            normalized: this.affixCleaner.removeAll()
+        };
     }
 
     getMatches(token, removeFirst = "suffix", inRecursion=false) {
