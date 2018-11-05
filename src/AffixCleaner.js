@@ -42,7 +42,6 @@ export default class AffixCleaner {
             }
         });
 
-        console.log('affixRemover:', this.currentToken);
         return this.currentToken;
     }
 

@@ -2,7 +2,6 @@ import AffixCleaner from './AffixCleaner';
 
 const re_short_vowels = /[\u064B-\u0652]/g;
 const re_hamza = /[\u0621\u0623\u0624\u0625\u0626]/g;
-const re_initial_hamza = /^[\u0622\u0623\u0625]/;
 
 const stop_words = ['\u064a\u0643\u0648\u0646',
     '\u0648\u0644\u064a\u0633',
@@ -208,7 +207,6 @@ export default class Stemmer {
         for (let pat of patterns) {
             let match;
             if (match = pat.exec(token)) {
-                console.log('match:', match.slice(1).join(''), pat.source);
                 matches.push(match.slice(1).join(''));
             }
         }
