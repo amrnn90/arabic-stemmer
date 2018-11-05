@@ -46,6 +46,18 @@ export default class AffixCleaner {
         return this.currentToken;
     }
 
+    removeAll() {
+        let token = this.currentToken;
+        while(true) {
+            const len = token.length;
+            token = this.remove(1, 'suffix', true);
+            
+            if (len == token.length)
+                break;
+        }
+        return token;
+    }
+
     getPrefix(count) {
         const token = this.currentToken;
         let affixList = prefixes[count] || [];

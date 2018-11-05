@@ -168,6 +168,19 @@ function () {
       return this.currentToken;
     }
   }, {
+    key: "removeAll",
+    value: function removeAll() {
+      var token = this.currentToken;
+
+      while (true) {
+        var len = token.length;
+        token = this.remove(1, 'suffix', true);
+        if (len == token.length) break;
+      }
+
+      return token;
+    }
+  }, {
     key: "getPrefix",
     value: function getPrefix(count) {
       var token = this.currentToken;
@@ -399,11 +412,9 @@ function () {
       }
 
       token = this.preNormalize(token);
-      this.affixCleaner = new _AffixCleaner.default(token);
-      token = this.affixCleaner.remove(4, 'prefix', true);
-      token = this.affixCleaner.remove(3, 'prefix', true);
-      token = this.affixCleaner.remove(2, 'prefix', true); // token = this.pre432(token);     
-      // token = this.suf32(token);     
+      this.affixCleaner = new _AffixCleaner.default(token); // token = this.affixCleaner.remove(4, 'prefix', true);
+      // token = this.affixCleaner.remove(3, 'prefix', true);
+      // token = this.affixCleaner.remove(2, 'prefix', true);  
 
       var matches = this.getMatches(token, 'suffix');
       matches = matches.concat(this.getMatches(token, 'prefix'));
@@ -450,6 +461,7 @@ function () {
           finalMatches.push(match);
         }
       });
+      finalMatches.push(this.affixCleaner.removeAll());
       return finalMatches;
     }
   }, {

@@ -152,11 +152,9 @@ export default class Stemmer {
         token = this.preNormalize(token);
         
         this.affixCleaner = new AffixCleaner(token);
-        token = this.affixCleaner.remove(4, 'prefix', true);
-        token = this.affixCleaner.remove(3, 'prefix', true);
-        token = this.affixCleaner.remove(2, 'prefix', true);
-        // token = this.pre432(token);     
-        // token = this.suf32(token);     
+        // token = this.affixCleaner.remove(4, 'prefix', true);
+        // token = this.affixCleaner.remove(3, 'prefix', true);
+        // token = this.affixCleaner.remove(2, 'prefix', true);  
 
         let matches = this.getMatches(token, 'suffix');
         matches = matches.concat(this.getMatches(token, 'prefix'));
@@ -195,6 +193,9 @@ export default class Stemmer {
                 finalMatches.push(match);
             }
         });
+        
+        finalMatches.push(this.affixCleaner.removeAll());
+        
         return finalMatches;
     }
 
