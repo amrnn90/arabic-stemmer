@@ -104,7 +104,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"src/Stemmer.js":[function(require,module,exports) {
+})({"src/AffixCleaner.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -118,25 +118,193 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var p4 = ['وكال', 'وبال', 'فبال']; // length three prefixes
-
-var p3 = ['وال', 'فال', 'كال', 'بال', 'ولل', 'فلل']; // length two prefixes
-
-var p2 = ['ال', 'لل', 'لي', 'لت', 'لن', 'لا', 'فل', 'فس', 'في', 'فت', 'فن', 'فا', 'سي', 'ست', 'سن', 'سا', 'ول', 'وس', 'وي', 'وت', 'ون', 'وا']; // length one prefixes
-
-var p1 = ['ل', 'ب', 'ف', 'س', 'و', 'ي', 'ت', 'ن', 'ا']; // length three suffixes
-
-var s3 = ["\u062A\u0645\u0644", "\u0647\u0645\u0644", "\u062A\u0627\u0646", "\u062A\u064A\u0646", "\u0643\u0645\u0644"]; // length two suffixes
-
-var s2 = ["\u0648\u0646", "\u0627\u062A", "\u0627\u0646", "\u064A\u0646", "\u062A\u0646", "\u0643\u0645", "\u0647\u0646", "\u0646\u0627", "\u064A\u0627", "\u0647\u0627", "\u062A\u0645", "\u0643\u0646", "\u0646\u064A", "\u0648\u0627", "\u0645\u0627", "\u0647\u0645"]; // length one suffixes
-
-var s1 = ["\u0629", "\u0647", "\u064A", "\u0643", "\u062A", "\u0627", "\u0646", 'و'];
-var pr4 = {
-  0: ["\u0645"],
-  1: ["\u0627"],
-  2: ["\u0627", "\u0648", "\u064A"],
-  3: ["\u0629"]
+var prefixes = {
+  4: ['وكال', 'وبال', 'فبال'],
+  3: ['وال', 'فال', 'كال', 'بال', 'ولل', 'فلل'],
+  2: ['ال', 'لل', 'لي', 'لت', 'لن', 'لا', 'فل', 'فس', 'في', 'فت', 'فن', 'فا', 'سي', 'ست', 'سن', 'سا', 'ول', 'وس', 'وي', 'وت', 'ون', 'وا'],
+  1: ['ل', 'ب', 'ف', 'س', 'و', 'ي', 'ت', 'ن', 'ا']
 };
+var suffixes = {
+  4: [],
+  3: ["\u062A\u0645\u0644", "\u0647\u0645\u0644", "\u062A\u0627\u0646", "\u062A\u064A\u0646", "\u0643\u0645\u0644"],
+  2: ["\u0648\u0646", "\u0627\u062A", "\u0627\u0646", "\u064A\u0646", "\u062A\u0646", "\u0643\u0645", "\u0647\u0646", "\u0646\u0627", "\u064A\u0627", "\u0647\u0627", "\u062A\u0645", "\u0643\u0646", "\u0646\u064A", "\u0648\u0627", "\u0645\u0627", "\u0647\u0645"],
+  1: ["\u0629", "\u0647", "\u064A", "\u0643", "\u062A", "\u0627", "\u0646", 'و']
+};
+
+var AffixCleaner =
+/*#__PURE__*/
+function () {
+  function AffixCleaner(token) {
+    _classCallCheck(this, AffixCleaner);
+
+    this.token = token;
+    this.currentToken = token;
+    this.prefix = '';
+    this.suffix = '';
+  }
+
+  _createClass(AffixCleaner, [{
+    key: "remove",
+    value: function remove(count) {
+      var _this = this;
+
+      var priority = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "suffix";
+      var bothSides = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+      if (!this.canRemoveAffix(count)) {
+        return this.currentToken;
+      }
+
+      var order = priority == 'suffix' ? ['Suffix', 'Prefix'] : ['Prefix', 'Suffix'];
+      var affix = null;
+      order.forEach(function (affixType) {
+        if (!affix || bothSides) {
+          affix = _this['get' + affixType](count);
+
+          _this['remove' + affixType](affix);
+        }
+      });
+      console.log('affixRemover:', this.currentToken);
+      return this.currentToken;
+    }
+  }, {
+    key: "getPrefix",
+    value: function getPrefix(count) {
+      var token = this.currentToken;
+      var affixList = prefixes[count] || [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = affixList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var prefix = _step.value;
+
+          if (token.startsWith(prefix) && this.isValidPrefix(prefix)) {
+            return prefix;
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return '';
+    }
+  }, {
+    key: "isValidPrefix",
+    value: function isValidPrefix(prefix) {
+      var wholePrefix = this.prefix + prefix;
+      var pList = prefixes[wholePrefix.length];
+
+      if (pList && pList.includes(wholePrefix)) {
+        return true;
+      }
+
+      return false;
+    }
+  }, {
+    key: "removePrefix",
+    value: function removePrefix(prefix) {
+      if (this.currentToken.startsWith(prefix)) {
+        this.currentToken = this.currentToken.substr(prefix.length);
+        this.prefix = this.prefix + prefix;
+      }
+    }
+  }, {
+    key: "getSuffix",
+    value: function getSuffix(count) {
+      var token = this.currentToken;
+      var affixList = suffixes[count] || [];
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = affixList[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var suffix = _step2.value;
+
+          if (token.endsWith(suffix) && this.isValidSuffix(suffix)) {
+            return suffix;
+          }
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return '';
+    }
+  }, {
+    key: "isValidSuffix",
+    value: function isValidSuffix(suffix) {
+      return true;
+      var wholeSuffix = suffix + this.suffix;
+      var sList = suffixes[wholeSuffix.length];
+
+      if (sList && sList.includes(wholeSuffix)) {
+        return true;
+      }
+
+      return false;
+    }
+  }, {
+    key: "removeSuffix",
+    value: function removeSuffix(suffix) {
+      if (this.currentToken.endsWith(suffix)) {
+        this.currentToken = this.currentToken.substr(0, this.currentToken.length - suffix.length);
+        this.suffix = suffix + this.suffix;
+      }
+    }
+  }, {
+    key: "canRemoveAffix",
+    value: function canRemoveAffix(count) {
+      return this.currentToken.length - count >= 3;
+    }
+  }]);
+
+  return AffixCleaner;
+}();
+
+exports.default = AffixCleaner;
+},{}],"src/Stemmer.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _AffixCleaner = _interopRequireDefault(require("./AffixCleaner"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 var re_short_vowels = /[\u064B-\u0652]/g;
 var re_hamza = /[\u0621\u0623\u0624\u0625\u0626]/g;
 var re_initial_hamza = /^[\u0622\u0623\u0625]/;
@@ -214,6 +382,8 @@ var Stemmer =
 function () {
   function Stemmer() {
     _classCallCheck(this, Stemmer);
+
+    this.affixCleaner = null;
   }
 
   _createClass(Stemmer, [{
@@ -229,8 +399,12 @@ function () {
       }
 
       token = this.preNormalize(token);
-      token = this.pre432(token);
-      token = this.suf32(token);
+      this.affixCleaner = new _AffixCleaner.default(token);
+      token = this.affixCleaner.remove(4, 'prefix', true);
+      token = this.affixCleaner.remove(3, 'prefix', true);
+      token = this.affixCleaner.remove(2, 'prefix', true); // token = this.pre432(token);     
+      // token = this.suf32(token);     
+
       var matches = this.getMatches(token, 'suffix');
       matches = matches.concat(this.getMatches(token, 'prefix'));
       matches = matches.map(function (m) {
@@ -243,51 +417,6 @@ function () {
       return matches;
     }
   }, {
-    key: "pre432",
-    value: function pre432(word) {
-      if (word.length >= 7) {
-        for (var _i = 0; _i < p4.length; _i++) {
-          var pre4 = p4[_i];
-          if (word.startsWith(pre4)) return word.substr(4);
-        }
-      }
-
-      if (word.length >= 6) {
-        for (var _i2 = 0; _i2 < p3.length; _i2++) {
-          var pre3 = p3[_i2];
-          if (word.startsWith(pre3)) return word.substr(3);
-        }
-      }
-
-      if (word.length >= 5) {
-        for (var _i3 = 0; _i3 < p2.length; _i3++) {
-          var pre2 = p2[_i3];
-          if (word.startsWith(pre2)) return word.substr(2);
-        }
-      }
-
-      return word;
-    }
-  }, {
-    key: "suf32",
-    value: function suf32(word) {
-      if (word.length >= 6) {
-        for (var _i4 = 0; _i4 < s3.length; _i4++) {
-          var suf3 = s3[_i4];
-          if (word.endsWith(suf3)) return word.substr(0, word.length - 3);
-        }
-      }
-
-      if (word.length >= 5) {
-        for (var _i5 = 0; _i5 < s2.length; _i5++) {
-          var suf2 = s2[_i5];
-          if (word.endsWith(suf2)) return word.substr(0, word.length - 2);
-        }
-      }
-
-      return word;
-    }
-  }, {
     key: "getMatches",
     value: function getMatches(token) {
       var _this2 = this;
@@ -297,36 +426,10 @@ function () {
       var len = token.length;
       var matches = [];
 
-      while (len >= 3) {
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
+      while (len > 3) {
+        matches = matches.concat(this.getMatchesForPatterns(token, patterns[len])); // token = this.removeOne(token, removeFirst);
 
-        try {
-          for (var _iterator = patterns[len][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-            var pat = _step.value;
-            var match = void 0;
-
-            if (match = pat.exec(token)) {
-              matches.push(match.slice(1).join(''));
-            }
-          }
-        } catch (err) {
-          _didIteratorError = true;
-          _iteratorError = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion && _iterator.return != null) {
-              _iterator.return();
-            }
-          } finally {
-            if (_didIteratorError) {
-              throw _iteratorError;
-            }
-          }
-        }
-
-        token = this.removeOne(token, removeFirst);
+        token = this.affixCleaner.remove(1, 'suffix', false);
 
         if (token.length == len) {
           break;
@@ -336,12 +439,12 @@ function () {
       }
 
       if (matches.length == 0) {
-        matches.push(originalToken);
+        matches = matches.concat(this.getMatchesForPatterns(token, patterns[3]));
       }
 
       var finalMatches = [];
       matches.forEach(function (match) {
-        if (match.length > 3 & match !== originalToken) {
+        if (match.length > 3 && match !== originalToken) {
           finalMatches = finalMatches.concat(_this2.getMatches(match, removeFirst));
         } else {
           finalMatches.push(match);
@@ -350,48 +453,39 @@ function () {
       return finalMatches;
     }
   }, {
-    key: "removeOne",
-    value: function removeOne(token) {
-      var removeFirst = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "suffix";
-      var len = token.length;
+    key: "getMatchesForPatterns",
+    value: function getMatchesForPatterns(token, patterns) {
+      var matches = [];
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
 
-      if (removeFirst == 'suffix') {
-        token = this.suf1(token);
+      try {
+        for (var _iterator = patterns[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var pat = _step.value;
+          var match = void 0;
 
-        if (token.length == len) {
-          token = this.pre1(token);
+          if (match = pat.exec(token)) {
+            console.log('match:', match.slice(1).join(''), pat.source);
+            matches.push(match.slice(1).join(''));
+          }
         }
-      } else {
-        token = this.pre1(token);
-
-        if (token.length == len) {
-          token = this.suf1(token);
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return != null) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
         }
       }
 
-      return token;
-    }
-  }, {
-    key: "suf1",
-    value: function suf1(word) {
-      /* """normalize short sufix""" */
-      for (var _i6 = 0; _i6 < s1.length; _i6++) {
-        var sf1 = s1[_i6];
-        if (word.endsWith(sf1)) return word.substr(0, word.length - 1);
-      }
-
-      return word;
-    }
-  }, {
-    key: "pre1",
-    value: function pre1(word) {
-      /* """normalize short prefix""" */
-      for (var _i7 = 0; _i7 < p1.length; _i7++) {
-        var sp1 = p1[_i7];
-        if (word.startsWith(sp1)) return word.substr(1);
-      }
-
-      return word;
+      return matches;
     }
   }, {
     key: "preNormalize",
@@ -423,7 +517,7 @@ function () {
 }();
 
 exports.default = Stemmer;
-},{}],"index.js":[function(require,module,exports) {
+},{"./AffixCleaner":"src/AffixCleaner.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _Stemmer = _interopRequireDefault(require("./src/Stemmer"));
