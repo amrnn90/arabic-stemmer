@@ -336,6 +336,7 @@ var patterns = {
   /(.)(.)(.)\u064a\u0627\u0627/, // فعلياء
   /(.)\u0648\u0627(.)\u064a(.)/, // فواعيل
   /\u0645\u062a(.)\u0627(.)(.)/, // متفاعل
+  /\u0627\u0646(.)(.)\u0627(.)/, // انفعال
 
   /* 64 */
   /\u0627(.)(.)(.)\u0627(.)/, // افعلال
@@ -412,10 +413,10 @@ function () {
       }
 
       token = this.preNormalize(token);
-      this.affixCleaner = new _AffixCleaner.default(token); // token = this.affixCleaner.remove(4, 'prefix', true);
-      // token = this.affixCleaner.remove(3, 'prefix', true);
-      // token = this.affixCleaner.remove(2, 'prefix', true);  
-
+      this.affixCleaner = new _AffixCleaner.default(token);
+      token = this.affixCleaner.remove(4, 'prefix', true);
+      token = this.affixCleaner.remove(3, 'prefix', true);
+      token = this.affixCleaner.remove(2, 'prefix', true);
       var matches = this.getMatches(token, 'suffix');
       matches = matches.concat(this.getMatches(token, 'prefix'));
       matches = matches.map(function (m) {
@@ -425,6 +426,7 @@ function () {
         !res.includes(current) && res.push(current);
         return res;
       }, []);
+      matches.push(this.affixCleaner.removeAll());
       return matches;
     }
   }, {
@@ -433,6 +435,7 @@ function () {
       var _this2 = this;
 
       var removeFirst = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "suffix";
+      var inRecursion = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       var originalToken = token;
       var len = token.length;
       var matches = [];
@@ -449,19 +452,18 @@ function () {
         len -= 1;
       }
 
-      if (matches.length == 0) {
+      if (matches.length == 0 && !inRecursion) {
         matches = matches.concat(this.getMatchesForPatterns(token, patterns[3]));
       }
 
       var finalMatches = [];
       matches.forEach(function (match) {
         if (match.length > 3 && match !== originalToken) {
-          finalMatches = finalMatches.concat(_this2.getMatches(match, removeFirst));
+          finalMatches = finalMatches.concat(_this2.getMatches(match, removeFirst, true));
         } else {
           finalMatches.push(match);
         }
       });
-      finalMatches.push(this.affixCleaner.removeAll());
       return finalMatches;
     }
   }, {
@@ -511,7 +513,8 @@ function () {
     key: "postNormalize",
     value: function postNormalize(token) {
       if (token.length == 3) {
-        var c1 = token[0].replace(/[وي]/, 'ا');
+        // const c1 = token[0].replace(/[وي]/, 'ا');
+        var c1 = token[0].replace(/[ي]/, 'ا');
         var c2 = token[1].replace(/[او]/, 'ي');
         var c3 = token[2].replace(/[اوه]/, 'ي');
         token = c1 + c2 + c3;

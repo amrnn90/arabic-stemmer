@@ -72,7 +72,7 @@ const patterns = {
         /(.)(.)(.)\u064a\u0627\u0627/,      // فعلياء
         /(.)\u0648\u0627(.)\u064a(.)/,      // فواعيل
         /\u0645\u062a(.)\u0627(.)(.)/,      // متفاعل
-
+        /\u0627\u0646(.)(.)\u0627(.)/,      // انفعال
         /* 64 */
         /\u0627(.)(.)(.)\u0627(.)/,         // افعلال
         /\u0645\u062a(.)(.)(.)(.)/,         // متفعلل
@@ -105,7 +105,7 @@ const patterns = {
         /(.)\u0627(.)(.)\u0647/,            // فاعلة
         /(.)(.)\u0627(.)\u064a/,            // فعالي
         /(.)(.)(.)\u0627\u0627/,            // فعلاء
-    
+
         /\u062a\u0645(.)(.)(.)/,            // تمفعل
 
         /* 54 */
@@ -123,7 +123,7 @@ const patterns = {
         /(.)(.)\u064a(.)/,                  // فعيل
         /(.)(.)\u0627(.)/,                  // فعال
         /(.)(.)(.)\u0647/,                  // فعلة
-    
+
         /\u0627(.)(.)(.)/,                  // افعل
         /\u062a(.)(.)(.)/,                  // تفعل
         /(.)\u0648(.)(.)/,                  // فوعل
@@ -141,32 +141,36 @@ export default class Stemmer {
     }
 
     stem(token) {
-        
+
         token = token.trim();
         token = token.replace(re_short_vowels, '');
-        
+
         if (stop_words.includes(token) || token.length < 3) {
             return token;
         }
-        
+
         token = this.preNormalize(token);
-        
+
         this.affixCleaner = new AffixCleaner(token);
-        // token = this.affixCleaner.remove(4, 'prefix', true);
-        // token = this.affixCleaner.remove(3, 'prefix', true);
-        // token = this.affixCleaner.remove(2, 'prefix', true);  
+        token = this.affixCleaner.remove(4, 'prefix', true);
+        token = this.affixCleaner.remove(3, 'prefix', true);
+        token = this.affixCleaner.remove(2, 'prefix', true);
 
         let matches = this.getMatches(token, 'suffix');
         matches = matches.concat(this.getMatches(token, 'prefix'));
         matches = matches.map(m => this.postNormalize(m));
+
         matches = matches.reduce((res, current) => {
             !res.includes(current) && res.push(current);
             return res;
         }, []);
+
+        matches.push(this.affixCleaner.removeAll());
+
         return matches;
     }
 
-    getMatches(token, removeFirst="suffix") {
+    getMatches(token, removeFirst = "suffix", inRecursion=false) {
         let originalToken = token;
         let len = token.length;
         let matches = [];
@@ -181,21 +185,20 @@ export default class Stemmer {
             len -= 1;
         }
 
-        if (matches.length == 0) {
+        if (matches.length == 0 && !inRecursion) {
             matches = matches.concat(this.getMatchesForPatterns(token, patterns[3]));
         }
 
         let finalMatches = [];
         matches.forEach((match) => {
             if (match.length > 3 && match !== originalToken) {
-                finalMatches = finalMatches.concat(this.getMatches(match, removeFirst));
+                finalMatches = finalMatches.concat(this.getMatches(match, removeFirst, true));
             } else {
                 finalMatches.push(match);
             }
         });
-        
-        finalMatches.push(this.affixCleaner.removeAll());
-        
+
+
         return finalMatches;
     }
 
@@ -220,7 +223,8 @@ export default class Stemmer {
 
     postNormalize(token) {
         if (token.length == 3) {
-            const c1 = token[0].replace(/[وي]/, 'ا');
+            // const c1 = token[0].replace(/[وي]/, 'ا');
+            const c1 = token[0].replace(/[ي]/, 'ا');
             const c2 = token[1].replace(/[او]/, 'ي');
             const c3 = token[2].replace(/[اوه]/, 'ي');
             token = c1 + c2 + c3;
