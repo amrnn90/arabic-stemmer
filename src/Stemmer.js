@@ -145,7 +145,7 @@ export default class Stemmer {
         token = token.trim();
         token = token.replace(re_short_vowels, '');
         
-        if (stop_words.includes(token)) {
+        if (stop_words.includes(token) || token.length < 3) {
             return token;
         }
         
