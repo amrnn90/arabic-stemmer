@@ -1,1 +1,3 @@
-export { default } from './Stemmer';
+import Stemmer from './src/Stemmer';
+
+module.exports = Stemmer;

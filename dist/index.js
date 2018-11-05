@@ -104,7 +104,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   // Override the current require with this new one
   return newRequire;
-})({"Stemmer2.js":[function(require,module,exports) {
+})({"src/Stemmer.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -209,14 +209,14 @@ var patterns = {
   3: [/(.)(.)(.)/]
 };
 
-var Stemmer2 =
+var Stemmer =
 /*#__PURE__*/
 function () {
-  function Stemmer2() {
-    _classCallCheck(this, Stemmer2);
+  function Stemmer() {
+    _classCallCheck(this, Stemmer);
   }
 
-  _createClass(Stemmer2, [{
+  _createClass(Stemmer, [{
     key: "stem",
     value: function stem(token) {
       var _this = this;
@@ -419,27 +419,19 @@ function () {
     }
   }]);
 
-  return Stemmer2;
+  return Stemmer;
 }();
 
-exports.default = Stemmer2;
+exports.default = Stemmer;
 },{}],"index.js":[function(require,module,exports) {
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function () {
-    return _Stemmer.default;
-  }
-});
-
-var _Stemmer = _interopRequireDefault(require("./Stemmer2"));
+var _Stemmer = _interopRequireDefault(require("./src/Stemmer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Stemmer2":"Stemmer2.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+module.exports = _Stemmer.default;
+},{"./src/Stemmer":"src/Stemmer.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -466,7 +458,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "40823" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37579" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
